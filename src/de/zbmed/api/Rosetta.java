@@ -18,7 +18,7 @@ public class Rosetta {
 		System.out.println("WebServices Ende");
 	}
 
-	static String submitDepositActivity(String subDirectoryName, String materialFlowId, String producerId,
+	public static String submitDepositActivity(String subDirectoryName, String materialFlowId, String producerId,
 			String rosettaInstance) throws Exception {
 		final String rosettaURL = Custom.getRosettaURL(rosettaInstance);
 		final String institution = Custom.getInstitution(rosettaInstance);

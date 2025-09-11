@@ -13,7 +13,7 @@ public class Wget {
 		System.out.println("Wget Ende");
 	}
 
-	static void download(String fileUrl, String targetPath) throws Exception {
+	public static void download(String fileUrl, String targetPath) throws Exception {
 		if (targetPath == null) {
 			targetPath = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
 		}
