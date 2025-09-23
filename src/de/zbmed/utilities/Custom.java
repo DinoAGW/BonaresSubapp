@@ -91,6 +91,10 @@ public class Custom {
 		return rosettaURL.concat("/dpsws/deposit/DepositWebServices?wsdl");
 	}
 
+	public static String getSip_WSDL_URL(String rosettaURL) {
+		return rosettaURL.concat("/dpsws/repository/SipWebServices?wsdl");
+	}
+
 	public static String getSRU_URL(String rosettaInstance) throws Exception {
 		return getRosettaURL(rosettaInstance).concat("/search/permanent/ie/sru");
 	}

@@ -15,17 +15,18 @@ public class SubApp {
 	public static final String fs = System.getProperty("file.separator");
 
 	public static void main(String[] args) throws Exception {
-		bearbeite();
+		bearbeite("82407524", "14903169", "dev");
 		System.out.println("SubApp Ende");
 	}
 
-	static void bearbeite() throws Exception {
+	static void bearbeite(String materialFlowId, String producerId, String rosettaInstance) throws Exception {
 		JsonNode tas = Zalf.getToAcknowledge();
 		for (JsonNode ta : tas) {
 			String uuid = ta.get("uuid").asText();
 			String mdId = ta.get("metadata_identifier").asText();
 			String url = ta.get("url").asText();
 			if (!url.startsWith("https://nbg1.your-objectstorage.com/zalf-lza/") || !url.endsWith(mdId + ".zip")) {
+				// TODO: url sollte später ganz bestimmte Form haben
 				throw new Exception(
 						"Url muss z.B. aussehen wie: https://nbg1.your-objectstorage.com/zalf-lza/2e6185dc-1fcd-4253-bcb7-499abf005db0.zip");
 			}
@@ -47,10 +48,12 @@ public class SubApp {
 			} finally {
 				ts.disconnect();
 			}
-			Drive.loescheRekursiv(Drive.workspace + fs + mdId + fs);
-			String ret = Rosetta.submitDepositActivity(mdId, "82407524", "14903169", "dev");
-			System.out.println("Rückgabe:\n" + ret);
+			String depositXml = Rosetta.submitDepositActivity(mdId, materialFlowId, producerId, rosettaInstance);
+			System.out.println("Rückgabe:\n" + depositXml);
+			String sipId = Rosetta.extractSipId(depositXml);
+			Rosetta.waitTillProcessed(sipId, rosettaInstance);
 			Zalf.acknowledge(uuid);
+//			Drive.loescheRekursiv(Drive.workspace + fs + mdId + fs);
 		}
 	}
 }
