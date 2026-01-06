@@ -15,7 +15,8 @@ public class SubApp {
 	public static final String fs = System.getProperty("file.separator");
 
 	public static void main(String[] args) throws Exception {
-		bearbeite("82407524", "14903169", "dev");
+//		bearbeite("82407524", "14903169", "dev");
+		bearbeite("337532297", "337533490", "test");
 		System.out.println("SubApp Ende");
 	}
 
@@ -24,11 +25,15 @@ public class SubApp {
 		for (JsonNode ta : tas) {
 			String uuid = ta.get("uuid").asText();
 			String mdId = ta.get("metadata_identifier").asText();
+			int version = ta.get("version").asInt();
+			if (version != 1)
+				continue;
 			String url = ta.get("url").asText();
-			if (!url.startsWith("https://nbg1.your-objectstorage.com/zalf-lza/") || !url.endsWith(mdId + ".zip")) {
+			if (!url.startsWith("https://nbg1.your-objectstorage.com/zalf-dis-lza/") || !url.endsWith(mdId + ".zip")) {
 				// TODO: url sollte später ganz bestimmte Form haben
 				throw new Exception(
-						"Url muss z.B. aussehen wie: https://nbg1.your-objectstorage.com/zalf-lza/2e6185dc-1fcd-4253-bcb7-499abf005db0.zip");
+						"Url muss z.B. aussehen wie: https://nbg1.your-objectstorage.com/zalf-dis-lza/2e6185dc-1fcd-4253-bcb7-499abf005db0.zip\n, ist aber: '"
+								+ url + "'");
 			}
 //			System.out.println(ta.toPrettyString());
 			System.out.println("Verarbeite " + uuid + " (" + mdId + ") = " + url);
@@ -44,7 +49,8 @@ public class SubApp {
 			targetPathFile.delete();
 			Transferserver ts = new Transferserver();
 			try {
-				ts.uploadFolder(Drive.workspace + fs + mdId + fs, "/exchange/lza/lza-zbmed/dev/SubApp/" + mdId + "/");
+				ts.uploadFolder(Drive.workspace + fs + mdId + fs,
+						"/exchange/lza/lza-zbmed/" + rosettaInstance + "/SubApp/" + mdId + "/");
 			} finally {
 				ts.disconnect();
 			}
@@ -53,7 +59,9 @@ public class SubApp {
 			String sipId = Rosetta.extractSipId(depositXml);
 			Rosetta.waitTillProcessed(sipId, rosettaInstance);
 			Zalf.acknowledge(uuid);
-//			Drive.loescheRekursiv(Drive.workspace + fs + mdId + fs);
+			Drive.loescheRekursiv(Drive.workspace + fs + mdId + fs);
+			// TODO: Pakete von Transferserver auf L verschieben?
+			break;
 		}
 	}
 }

@@ -85,7 +85,12 @@ public class Transferserver {
 	}
 
 	public void mkdir(String remoteFolderPath) throws Exception {
-		sftpChannel.mkdir(remoteFolderPath);
+		try {
+			sftpChannel.mkdir(remoteFolderPath);
+		} catch (Exception e) {
+			System.err.println("Fehler beim erstellen des Ordners " + remoteFolderPath);
+			throw e;
+		}
 	}
 
 	public void ls(String remoteFilePath) throws Exception {
@@ -104,6 +109,32 @@ public class Transferserver {
 		Files.copy(is, Paths.get(localFilePath));
 	}
 
+	public void getFolder(String remoteFolderPath, String localFolderPath) throws Exception {
+		if (!localFolderPath.endsWith(fs)) {
+			throw new Exception("Es wird erwartet, dass localFolderPath mit " + fs + " endet: " + localFolderPath);
+		}
+		if (!remoteFolderPath.endsWith("/")) {
+			throw new Exception("Es wird erwartet, dass localFolderPath mit / endet: " + remoteFolderPath);
+		}
+		File localFolder = new File(localFolderPath);
+		if (localFolder.exists()) {
+			throw new Exception("Datei oder Ordner existiert bereits: " + localFolderPath);
+		}
+		if (!localFolder.mkdirs()) {
+			throw new Exception("OrdnerErstellung hat nicht geklappt: " + localFolderPath);
+		}
+		Vector<LsEntry> lses = sftpChannel.ls(remoteFolderPath);
+		for (LsEntry lse : lses) {
+			if (lse.getAttrs().isDir()) {
+				String folderName = lse.getFilename();
+				getFolder(remoteFolderPath + folderName + "/", localFolderPath + folderName + fs);
+			} else {
+				String fileName = lse.getFilename();
+				getFile(remoteFolderPath + fileName, localFolderPath + fileName);
+			}
+		}
+	}
+
 	public void removeFile(String remoteFilePath) throws Exception {
 		sftpChannel.rm(remoteFilePath);
 	}
@@ -111,9 +142,11 @@ public class Transferserver {
 	public static void main(String[] args) throws Exception {
 		Transferserver ts = new Transferserver();
 		try {
-			ts.uploadFolder("2025_09_04_2e6185dc-1fcd-4253-bcb7-499abf005db0" + fs,
-					"/exchange/lza/lza-zbmed/dev/SubApp/2025_09_04_2e6185dc-1fcd-4253-bcb7-499abf005db0/");
-			ts.ls("/exchange/lza/lza-zbmed/dev/SubApp/");
+//			ts.uploadFolder("2025_09_04_2e6185dc-1fcd-4253-bcb7-499abf005db0" + fs,
+//					"/exchange/lza/lza-zbmed/dev/SubApp/2025_09_04_2e6185dc-1fcd-4253-bcb7-499abf005db0/");
+//			ts.ls("/exchange/lza/lza-zbmed/dev/SubApp/");
+			ts.getFolder("/exchange/lza/lza-zbmed/dev/SubApp/2025_09_04_2e6185dc-1fcd-4253-bcb7-499abf005db0/",
+					"/home/wutschka/L/04_Versuchs_SIPs/dev/SubApp/Versuch1/");
 		} finally {
 			ts.disconnect();
 		}

@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Zalf {
+//	public static String zalfApiBaseUrl = "https://longtermarchiving-e.dataservice.zalf.de";
+	public static String zalfApiBaseUrl = "http://142.132.163.56";
 
 	public static void main(String[] args) throws Exception {
 //		JsonNode uploads = getToAcknowledge();
@@ -23,14 +25,14 @@ public class Zalf {
 
 	public static ResponseEntity<String> acknowledge(String uuid) {
 		RestTemplate restTemplate = new RestTemplate();
-		String acknowledgesUrl = "https://longtermarchiving-e.dataservice.zalf.de/api/lza/acknowledge/" + uuid;
+		String acknowledgesUrl = zalfApiBaseUrl + "/api/lza/acknowledge/" + uuid;
 		ResponseEntity<String> response = restTemplate.postForEntity(acknowledgesUrl, null, String.class);
 		return response;
 	}
 
 	public static JsonNode getUploads() throws Exception {
 		RestTemplate restTemplate = new RestTemplate();
-		String uploadsUrl = "https://longtermarchiving-e.dataservice.zalf.de/api/lza/uploads/";
+		String uploadsUrl = zalfApiBaseUrl + "/api/lza/uploads/";
 		ResponseEntity<String> response = restTemplate.getForEntity(uploadsUrl, String.class);
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode json = mapper.readTree(response.getBody());
@@ -39,7 +41,7 @@ public class Zalf {
 
 	public static JsonNode getToAcknowledge() throws Exception {
 		RestTemplate restTemplate = new RestTemplate();
-		String uploadsUrl = "https://longtermarchiving-e.dataservice.zalf.de/api/lza/to_acknowledge/";
+		String uploadsUrl = zalfApiBaseUrl + "/api/lza/to_acknowledge/";
 		ResponseEntity<String> response = null;
 		int versuche = 20;
 		while (true) {
@@ -52,7 +54,7 @@ public class Zalf {
 			if (versuche == 0) {
 				throw new Exception("Zalf API antwortet nicht");
 			} else {
-				System.err.println("Hat nicht geklappt");
+				System.err.println("getToAcknowledge hat nicht geklappt");
 			}
 			Thread.sleep(5000);
 		}
