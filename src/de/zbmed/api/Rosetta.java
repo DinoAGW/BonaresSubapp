@@ -19,16 +19,16 @@ public class Rosetta {
 	public static void main(String[] args) throws Exception {
 //		System.out.println(getMD("IE28266070", "prod"));
 //		System.out.println(getMD("IE9712123", "prod"));
-		String depositXml = submitDepositActivity("2025_09_04_2e6185dc-1fcd-4253-bcb7-499abf005db0", "82407524",
-				"14903169", "dev");
+//		String depositXml = submitDepositActivity("2025_09_04_2e6185dc-1fcd-4253-bcb7-499abf005db0", "82407524",
+//				"14903169", "dev");
 //		System.out.println(depositXml);
-		String sipId = extractSipId(depositXml);
+//		String sipId = extractSipId(depositXml);
 //		String sipId = "136077";
 //		SipStatusInfo ssi = getSIPStatusInfo(sipId, "dev");
 //		System.out.println(ssi.getModule());
 //		System.out.println(ssi.getStatus());
 //		System.out.println(ssi.getStage());
-		waitTillProcessed(sipId, "dev");
+//		waitTillProcessed(sipId, "dev");
 		System.out.println("WebServices Ende");
 	}
 
