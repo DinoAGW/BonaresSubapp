@@ -61,7 +61,7 @@ public class SubApp {
 			Zalf.acknowledge(uuid);
 			Drive.loescheRekursiv(Drive.workspace + fs + mdId + fs);
 			// TODO: Pakete von Transferserver auf L verschieben?
-			break;
+//			break;
 		}
 	}
 }
