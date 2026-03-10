@@ -138,8 +138,16 @@ public class Rosetta {
 				new QName("http://dps.exlibris.com/", "DepositWebServices"));
 		dWs.setHandlerResolver(new HeaderHandlerResolver(userName, password, institution));
 
-		return dWs.getDepositWebServicesPort().submitDepositActivity(null, materialFlowId, subDirectoryName, producerId,
-				null);
+		String depositXml = dWs.getDepositWebServicesPort().submitDepositActivity(null, materialFlowId,
+				subDirectoryName, producerId, null);
+		Node node = XmlHelper.parse(depositXml);
+		XmlHelper.removeEmptyNodes(node);
+		node = XmlHelper.getFirstChildByName(node, "ser:deposit_result");
+		node = XmlHelper.getFirstChildByName(node, "ser:is_error");
+		if (!node.getTextContent().contentEquals("false")) {
+			throw new Exception("Fehler:\n" + depositXml);
+		}
+		return depositXml;
 	}
 
 //	private static IEWebServices getIEWebServicesPort(String rosettaInstance) throws Exception {

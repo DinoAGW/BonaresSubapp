@@ -114,7 +114,7 @@ public class Transferserver {
 			throw new Exception("Es wird erwartet, dass localFolderPath mit " + fs + " endet: " + localFolderPath);
 		}
 		if (!remoteFolderPath.endsWith("/")) {
-			throw new Exception("Es wird erwartet, dass localFolderPath mit / endet: " + remoteFolderPath);
+			throw new Exception("Es wird erwartet, dass remoteFolderPath mit / endet: " + remoteFolderPath);
 		}
 		File localFolder = new File(localFolderPath);
 		if (localFolder.exists()) {
@@ -125,6 +125,8 @@ public class Transferserver {
 		}
 		Vector<LsEntry> lses = sftpChannel.ls(remoteFolderPath);
 		for (LsEntry lse : lses) {
+			if (lse.getFilename().startsWith("."))
+				continue;
 			if (lse.getAttrs().isDir()) {
 				String folderName = lse.getFilename();
 				getFolder(remoteFolderPath + folderName + "/", localFolderPath + folderName + fs);
@@ -137,6 +139,27 @@ public class Transferserver {
 
 	public void removeFile(String remoteFilePath) throws Exception {
 		sftpChannel.rm(remoteFilePath);
+	}
+
+	public void removeFolder(String remoteFolderPath) throws Exception {
+		if (!remoteFolderPath.endsWith("/")) {
+			throw new Exception("Es wird erwartet, dass remoteFolderPath mit / endet: " + remoteFolderPath);
+		}
+		Vector<LsEntry> lses = sftpChannel.ls(remoteFolderPath);
+		for (LsEntry lse : lses) {
+			if (lse.getFilename().contentEquals(".") || lse.getFilename().contentEquals(".."))
+				continue;
+			if (lse.getAttrs().isDir()) {
+				String folderName = remoteFolderPath + lse.getFilename() + "/";
+				removeFolder(folderName);
+			} else {
+				String fileName = remoteFolderPath + lse.getFilename();
+//				System.out.println("Lösche: " + fileName);
+				sftpChannel.rm(fileName);
+			}
+		}
+//		System.out.println("Lösche: " + remoteFolderPath);
+		sftpChannel.rmdir(remoteFolderPath);
 	}
 
 	public static void main(String[] args) throws Exception {
