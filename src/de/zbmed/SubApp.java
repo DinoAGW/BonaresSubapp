@@ -16,7 +16,7 @@ import de.zbmed.utilities.Zip;
 public class SubApp {
 	public static String fs = System.getProperty("file.separator");
 	private static String lOrdner = Drive.home + "/L/02_SIPs_PROD/03_BonaRes/";
-	private static Boolean breakAfterIngest = true;
+	private static Boolean breakAfterIngest = false;
 
 	public static void main(String[] args) throws Exception {
 //		bearbeite("82407524", "14903169", "dev");
