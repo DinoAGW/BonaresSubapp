@@ -65,7 +65,7 @@ public class SubApp {
 			Zip.unzip(targetPath, Drive.workspace + fs + mdId + fs);
 			targetPathFile.delete();
 			ts.uploadFolder(Drive.workspace + fs + mdId + fs,
-					"/exchange/lza/lza-zbmed/" + rosettaInstance + "/SubApp/" + mdId + "/");
+					"/" + rosettaInstance + "/SubApp/" + mdId + "/");
 			String depositXml = Rosetta.submitDepositActivity(mdId, materialFlowId, producerId, rosettaInstance);
 			System.out.println("Rückgabe:\n" + depositXml);
 			String sipId = Rosetta.extractSipId(depositXml);
@@ -73,8 +73,8 @@ public class SubApp {
 			Zalf.acknowledge(uuid);
 			Drive.loescheRekursiv(Drive.workspace + fs + mdId + fs);
 			// Pakete auf L verschieben
-			ts.getFolder("/exchange/lza/lza-zbmed/" + rosettaInstance + "/SubApp/" + mdId + "/", lOrdner + mdId + "/");
-			ts.removeFolder("/exchange/lza/lza-zbmed/" + rosettaInstance + "/SubApp/" + mdId + "/");
+			ts.getFolder("/" + rosettaInstance + "/SubApp/" + mdId + "/", lOrdner + mdId + "/");
+			ts.removeFolder("/" + rosettaInstance + "/SubApp/" + mdId + "/");
 			if (breakAfterIngest) {
 				break;
 			}
