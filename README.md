@@ -8,6 +8,6 @@ nach Rosetta ingestet und sie anschließend acknowledged.
 * Java: JavaSE-1.8
 * benötigt: ~/Rosetta_Properties.txt
 * benötigt: ~/SSH-Keys/TIB\ transferserver\ Linux
-* `mvn install:install-file -Dfile=lib/dps-sdk-7.3.0.jar -DgroupId=com.exlibris -DartifactId=dps-sdk -Dversion=7.3.0 -Dpackaging=jar`
+* `mvn install:install-file -Dfile=lib/dps-sdk-7.3.0.jar -DgroupId=com.exlibris -DartifactId=dps-sdk -Dversion=7.3.0 -Dpackaging=jar -DgeneratePom=true`
 * mkdir -p ~/workspace/BonaresSubapp/
-* mittels ssh-keyscan -t rsa transferser.lza.tib.eu kann man den Key ermitteln, diesen dann unter ~/.ssh/known_hosts eintragen
+* mittels `ssh-keyscan -t rsa transfer.lza.tib.eu` kann man den Key ermitteln, diesen dann unter ~/.ssh/known_hosts eintragen
